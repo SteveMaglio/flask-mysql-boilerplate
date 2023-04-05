@@ -6,18 +6,22 @@ services:
   ##################################################################
   # configure the webserver container
   web:
+  #STEPHEN: Middle Tier of 3 tier system. Go to flask-app/ directory, and build that dockerfile for this specific image. 
     
     # Set up the web server according to the Dockerfile inside the api/ folder
     build: flask-app/
     container_name: web
     # connect the src folder in on the host machine to the code folder in the container. 
     # note that the code folder in contaier is the working directory (see DockerFile).
+
+    # STEPHEN: The flask-app directory(above) appears as the code directory inside the container
     volumes: ['./flask-app:/code', './secrets:/secrets'] 
 
     # have the container restart if it fails for some reason. 
     restart: unless-stopped
 
     # map host port 8001 to container port 4000 (see the EXPOSE command in api/Dockerfile)
+    # STEPHEN: Port 4000 is is mapped to the one inside the flask-app/Dockerfile.
     ports:
       - "8001:4000"
 
@@ -33,6 +37,7 @@ services:
     volumes:
       # anything in (or mounted in) /docker-entrypoint-initdb.d in the container 
       # will automatically be executed when the container is created
+      # STEPHEN: Automatically runs .sql files as the server starts.
       - ./db:/docker-entrypoint-initdb.d/:ro
 
     ports:
